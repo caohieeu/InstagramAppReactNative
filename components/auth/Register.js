@@ -99,8 +99,8 @@ export default function Register(props) {
         </View>
         <View 
             style={{marginBottom: 5, alignItems: 'center', borderTopWidth: 1, padding: 10}}
-            onPress={() => props.navigation.navigate('Login')}>
-            <Text>
+            >
+            <Text onPress={() => props.navigation.navigate('Login')}>
                 Already have an account? SignIn.
             </Text>
         </View>
