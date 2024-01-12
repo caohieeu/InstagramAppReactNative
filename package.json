@@ -25,7 +25,9 @@
     "react-native-vector-icons": "^10.0.3",
     "react-redux": "^9.0.4",
     "redux": "^5.0.1",
-    "redux-thunk": "^3.1.0"
+    "redux-thunk": "^3.1.0",
+    "expo-camera": "~13.4.4",
+    "expo-image-picker": "~14.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
