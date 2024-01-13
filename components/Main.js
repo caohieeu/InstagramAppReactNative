@@ -7,9 +7,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import FeedScreen from './main/Feed';
-import AddScreen from './main/Add';
-import ProfileScreen from './main/Profile';
+import FeedScreen from './main/post/Feed';
+import CameraScreen from './main/add/Camera';
+import ProfileScreen from './main/profile/Profile';
 
 const Tab = createMaterialBottomTabNavigator();
 

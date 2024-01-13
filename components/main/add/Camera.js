@@ -5,7 +5,7 @@ import { Camera, CameraType } from 'expo-camera';
 import Feather from 'react-native-vector-icons/Feather'
 import * as ImagePicker from 'expo-image-picker'
 
-export default function Add() {
+export default function Add({ navigation, props }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [camera, setCamera] = useState(null);
@@ -42,42 +42,73 @@ export default function Add() {
     });
 
     if(!result.canceled) {
-        console.log(result);
+        setImage(result.assets[0].uri);
     }
     else {
         alert('You did not select any image');
     }
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.cameraContainer}>
-        <Camera 
-            style={styles.camera}
-            ref={ref => setCamera(ref)}
-            type={type}
-            ratio={'1:1'} />
+  if(!image) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.cameraContainer}>
+          <Camera 
+              style={styles.camera}
+              ref={ref => setCamera(ref)}
+              type={type}
+              ratio={'1:1'} />
+        </View>
+        {image && <Image source={{uri: image}} style={{flex: 1, marginTop: 255, width: 100}} />}
+        <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+              <Feather 
+                  name="rotate-cw"
+                  size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={takePicture}>
+              <Feather 
+                  name="aperture"
+                  size={50} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pickImageAsync}>
+              <Feather 
+                  name="image"
+                  size={30} />
+            </TouchableOpacity>
+          </View>
       </View>
-      {image && <Image source={{uri: image}} style={{flex: 1, marginTop: 255, width: 100}} />}
-      <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+    );
+  }
+  else {
+    console.log(image);
+    return (
+      <View style={styles.container}>
+        <View style={[styles.cameraContainer]}>
+          <Image 
+            source={{ uri: image }}
+            style={{flex: 1}} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity>
             <Feather 
-                name="rotate-cw"
-                size={30} />
+                    style={{margin: 10}}
+                    name="trash-2"
+                    size={50}
+                    onPress={() => setImage(null)} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={takePicture}>
+          <TouchableOpacity>
             <Feather 
-                name="aperture"
-                size={50} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={pickImageAsync}>
-            <Feather 
-                name="image"
-                size={30} />
+                    style={{margin: 10}}
+                    name="check"
+                    size={50}
+                    color={'green'}
+                    onPress={() => navigation.navigate("Save", {image})} />
           </TouchableOpacity>
         </View>
-    </View>
-  );
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -98,6 +129,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'transparent',
     margin: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     flex: 1,

@@ -1,11 +1,12 @@
 import  React, { Component } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { Provider } from 'react-redux';
-import { legacy_createStore as createStore, applyMiddleware } from 'redux'
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import { thunk } from 'redux-thunk';
-import rootReducer from './redux/reducers'
-import MainScreen from './components/Main'
-import AddScreen from './components/main/Add'
+import rootReducer from './redux/reducers';
+import MainScreen from './components/Main';
+import CameraScreen from './components/main/add/Camera';
+import SaveScreen from './components/main/add/Save';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -73,8 +74,7 @@ export default class App extends Component {
     if(!loggedIn) {
       return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName="Landing">
-          <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
@@ -86,7 +86,8 @@ export default class App extends Component {
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Main">
               <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="Add" component={AddScreen} />
+              <Stack.Screen name="Add" component={CameraScreen} />
+              <Stack.Screen name="Save" navigation={this.props.navigation} component={SaveScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
