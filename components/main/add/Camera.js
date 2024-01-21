@@ -81,7 +81,6 @@ export default function Add({ navigation, props }) {
     );
   }
   else {
-    console.log(image);
     return (
       <View style={styles.container}>
         <View style={[styles.cameraContainer]}>

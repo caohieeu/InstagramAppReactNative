@@ -25,11 +25,11 @@ function Save(props) {
         const blob = await response.blob();
 
         const task = firebase
-            .storage()
-            .ref()
-            .child(childPath)
-            .put(blob);
-
+                        .storage()
+                        .ref()
+                        .child(childPath)
+                        .put(blob);
+        
         const taskProgress = snapshot => {
             console.log(`transfered: ${snapshot.bytesTransferred}`);
         }
@@ -37,31 +37,34 @@ function Save(props) {
             task.snapshot.ref.getDownloadURL()
                 .then((snapshot) => {
                     console.log(snapshot);
-                    savePostData(snapshot);
+                    savePoastData(snapshot);
                 })
+                .catch(error => {
+                    console.log(error);
+                }) 
         }
-        const taskError = snapshot => {
+        const taskError  = snapshot => {
             console.log(snapshot);
         }
-        task.on('state_change', taskProgress, taskError, taskCompleted)
-    }
+        task.on('state_change', taskProgress, taskError, taskCompleted);
 
-    const savePostData = (downloadURL) => {
-        firebase.firestore()
-            .collection("post")
-            .doc(firebase.auth().currentUser.uid)
-            .collection("userPosts")
-            .add({
-                downloadURL,
-                caption,
-                creation: firebase.firestore.FieldValue.serverTimestamp(),
-            })
-            .then((function () {
-                navigation.popToTop();
-            }))
-            .catch((error) => {
-                console.log(error);
-            })
+        const savePoastData = (downloadURL) => {
+            firebase.firestore()
+                .collection("posts")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("userPosts")
+                .add({
+                    downloadURL,
+                    caption,
+                    creation: firebase.firestore.FieldValue.serverTimestamp(),
+                })
+                .then(function() {
+                    navigation.popToTop();
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
     }
 
     const { currentUser } = props;

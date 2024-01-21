@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 
-import { fetchUser } from '../redux/action/index';
+import { fetchUser, fetchUserPosts } from '../redux/action/index';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -20,11 +20,12 @@ const EmptyScreen = () => {
 export class Main extends Component {
     componentDidMount() {
         this.props.fetchUser();
+        this.props.fetchUserPosts();
     }
 
     render() {
         try {
-            const { currentUser } = this.props;
+            const { currentUser, posts } = this.props;
 
             if(currentUser == undefined) {
                 return (
@@ -77,7 +78,6 @@ export class Main extends Component {
                         <Tab.Screen 
                             name="Profile" 
                             component={ProfileScreen}
-                            initialParams={{currentUser: currentUser}}
                             options={{
                                 tabBarIcon: ({ color, size, focused }) => (
                                     <MaterialCommunityIcons 
@@ -99,8 +99,9 @@ export class Main extends Component {
 };
 
 const mapStateToProps = (store) => ({
-    currentUser: store.userState.currentUser
+    currentUser: store.userState.currentUser,
+    posts: store.userState.posts,
 })
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchUserPosts}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
