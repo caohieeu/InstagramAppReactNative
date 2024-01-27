@@ -10,6 +10,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FeedScreen from './main/post/Feed';
 import CameraScreen from './main/add/Camera';
 import ProfileScreen from './main/profile/Profile';
+import SearchScreen from './main/profile/Search';
+import firebase from 'firebase/compat';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -58,6 +60,18 @@ export class Main extends Component {
                                         size={26} />
                                 ),
                             }} />
+                        <Tab.Screen 
+                            name="Search" 
+                            component={SearchScreen}
+                            options={{
+                                tabBarIcon: ({ color, size, focused }) => (
+                                    <MaterialCommunityIcons 
+                                        name="magnify" 
+                                        color={focused ? "black" : color} 
+                                        size={26}
+                                         />
+                                ),
+                            }} />
                         <Tab.Screen
                             listeners={({ navigation }) => ({
                                 tabPress: event => {
@@ -78,6 +92,12 @@ export class Main extends Component {
                         <Tab.Screen 
                             name="Profile" 
                             component={ProfileScreen}
+                            listeners={({ navigation }) => ({
+                                tabPress: event => {
+                                    event.preventDefault;
+                                    navigation.navigate("Profile", { uid: firebase.auth().currentUser.uid });
+                                }
+                            })}
                             options={{
                                 tabBarIcon: ({ color, size, focused }) => (
                                     <MaterialCommunityIcons 

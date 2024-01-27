@@ -73,14 +73,16 @@ function Save(props) {
             <View style={{flexDirection: 'col', flex: 1}}>
                 <View style={container.center}>
                     <View style={{flexDirection: 'row', alignItems: 'center', paddingLeft: 15, paddingTop: 15}}>
-                        <FontAwesome5
-                            name="user-circle" size={35} color="black" />
-                        <Text style={{marginLeft: 10}}>
+                        <View style={{width: 42, height: 42}}>
+                            <Image 
+                                source={{ uri: currentUser.image}}
+                                style={{flex: 1, borderRadius: 40}} />
+                        </View>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>
                             {currentUser.name}
                         </Text>
                     </View>   
                     <TextInput
-                        style={styles.textInput}
                         multiline
                         numberOfLines={4}
                         onChangeText={(textCaption) => setCaption(textCaption)}

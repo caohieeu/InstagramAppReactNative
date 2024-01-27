@@ -39,3 +39,29 @@ export function fetchUserPosts() {
             })
     })
 }
+
+export function queryUsersByUsername(username) {
+    return (() => {
+        return new Promise((resovle, reject) => {
+            if(username.length === 0) {
+                resovle([]);
+            }
+            firebase.firestore()
+                .collection("users")
+                .where('username', '>=', username)
+                .limit(10)
+                .get()
+                .then((snapshot) => {
+                    let users = snapshot.docs.map((doc) => {
+                        let id = doc.id;
+                        let data = doc.data();
+                        return {
+                            id,
+                            ...data
+                        }
+                    })
+                    resovle(users);
+                })
+        })
+    }) 
+}
