@@ -42,7 +42,6 @@ const Search = (props) => {
                     style={styles.searchInput}
                     selectionColor={"#A9A9A9"}
                     onChangeText={async (txtSearch) => {
-                        console.log(txtSearch);
                         await props.queryUsersByUsername(txtSearch).then(users => {
                             setUsers(users);
                         })

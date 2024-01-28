@@ -11,7 +11,7 @@ import {
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchUser, fetchUserPosts } from '../../../redux/action/index';
+import { fetchUser, fetchUserPosts, fetchUserFollowing } from '../../../redux/action/index';
 import firebase from 'firebase/compat';
 
 function Profile(props) {
@@ -19,10 +19,10 @@ function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [following, setFollowing] = useState(false);
 
     const updateUserData =() => {
         if(props.route.params.uid === firebase.auth().currentUser.uid) {
-            console.log("0")
             const { currentUser, posts } = props;
             setUser(currentUser);
             setUserPosts(posts);
@@ -57,13 +57,19 @@ function Profile(props) {
                     })
                     setUserPosts(posts);
                 })
+            if(props.following.indexOf(props.route.params.uid) > -1) {
+                setFollowing(true);
+            }
+            else {
+                setFollowing(false);
+            }
         }
     }
 
     useEffect(() => {
         setLoading(true);
         updateUserData();
-    }, [props.route.params.uid, props.currentUser, props.posts])
+    }, [props.route.params.uid, props.currentUser, props.posts, props.following])
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -72,6 +78,24 @@ function Profile(props) {
         updateUserData();
         setRefreshing(false);
     };
+
+    function onFollow() {
+        firebase.firestore()
+            .collection("following")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userFollowing")
+            .doc(user.uid)
+            .set({})
+    }
+
+    function onUnFollow() {
+        firebase.firestore()
+            .collection("following")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userFollowing")
+            .doc(user.uid)
+            .delete()
+    }
 
     function countPosts(){
         return userPosts.length;
@@ -146,13 +170,21 @@ function Profile(props) {
                         <Text style={{textAlign: "center", fontWeight: "bold"}}>Edit Profile</Text>
                     </TouchableOpacity> : 
                     <View style={{flexDirection: 'row', justifyContent: 'space-around' }}>
+                        {following ? 
+                            (<TouchableOpacity
+                                    style={[styles.btnInteract, following ? styles.borderGreen:null]}
+                                    onPress={() => onUnFollow()}>
+                                <Text style={styles.btnFollowing}>Following</Text>
+                            </TouchableOpacity>
+                            )
+                        :
+                            (<TouchableOpacity
+                                    style={[styles.btnInteract, following ? styles.borderGreen:null]}
+                                    onPress={() => onFollow()}>
+                                <Text style={styles.btnFollow}>Follow</Text>
+                            </TouchableOpacity>)}
                         <TouchableOpacity
-                            style={styles.btnFollow}
-                            onPress={() => {console.log("You have entered !")}}>
-                            <Text style={{textAlign: "center", fontWeight: "bold"}}>Following</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.btnMessage}
+                            style={styles.btnInteract}
                             onPress={() => {console.log("You have entered !")}}>
                             <Text style={{textAlign: "center", fontWeight: "bold"}}>Message</Text>
                         </TouchableOpacity>
@@ -249,31 +281,34 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 3,
     },
-    btnFollow: {
+    btnInteract: {
         borderWidth: 1,
-        borderColor: "#A9A9A9",
         padding: 8,
         borderRadius: 3,
         marginLeft: 10,
-        marginRight: 5,
+        marginRight: 10,
         flex: 1,
     },
-    btnMessage: {
-        borderWidth: 1,
-        borderColor: "#A9A9A9",
-        padding: 8,
-        borderRadius: 3,
-        marginLeft: 5,
-        marginRight: 10,
-        flex: 1
+    btnFollow: {
+        textAlign: "center", 
+        fontWeight: "bold"
+    },
+    btnFollowing: {
+        textAlign: "center", 
+        fontWeight: "bold",
+        color: "#32CD32",
+    },
+    borderGreen: {
+        borderColor: "#32CD32"
     }
 });
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    posts: store.userState.posts
+    posts: store.userState.posts,
+    following: store.userState.following
 })
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchUserPosts}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchUserPosts, fetchUserFollowing}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

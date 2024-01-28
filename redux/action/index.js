@@ -1,5 +1,6 @@
 import firebase from "firebase/compat"
 import { USER_STATE_CHANGE, USER_POST_STATE_CHANGE } from '../constants/index';
+import { SectionList } from "react-native";
 
 export function fetchUser() {
     return ((dispatch) => {
@@ -9,7 +10,10 @@ export function fetchUser() {
             .get()
             .then((snapshot) => {
                 if(snapshot.exists) {
-                    dispatch({ type: "USER_STATE_CHANGE", currentUser: snapshot.data() });
+                    dispatch({
+                        type: "USER_STATE_CHANGE", 
+                        currentUser: {uid: firebase.auth().currentUser.uid, ...snapshot.data()}
+                    });
                 }
                 else {
                     console.log("error when fetching user");
@@ -64,4 +68,20 @@ export function queryUsersByUsername(username) {
                 })
         })
     }) 
+}
+
+export function fetchUserFollowing() {
+    return ((dispatch) => {
+        firebase.firestore()
+        .collection("following")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("userFollowing")
+        .onSnapshot((snapshot) => {
+            let listFollowing = snapshot.docs.map(doc => {
+                let id = doc.id;
+                return id
+            })
+            dispatch({ type: 'USER_FOLLOWING_STATE_CHANGE', following: listFollowing });
+        })
+    })
 }

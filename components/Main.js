@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 
-import { fetchUser, fetchUserPosts } from '../redux/action/index';
+import { fetchUser, fetchUserPosts, fetchUserFollowing } from '../redux/action/index';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -23,13 +23,14 @@ export class Main extends Component {
     componentDidMount() {
         this.props.fetchUser();
         this.props.fetchUserPosts();
+        this.props.fetchUserFollowing();
     }
 
     render() {
         try {
             const { currentUser, posts } = this.props;
 
-            if(currentUser == undefined) {
+            if(currentUser === undefined) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center'}}>
                         <ActivityIndicator size="large" color={'black'} />
@@ -120,8 +121,7 @@ export class Main extends Component {
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    posts: store.userState.posts,
 })
-const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchUserPosts}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({fetchUser, fetchUserPosts, fetchUserFollowing}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
