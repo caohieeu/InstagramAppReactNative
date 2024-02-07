@@ -11,6 +11,8 @@ import FeedScreen from './main/post/Feed';
 import CameraScreen from './main/add/Camera';
 import ProfileScreen from './main/profile/Profile';
 import SearchScreen from './main/profile/Search';
+import ChatScreen from './main/chat/Chat';
+import ChatListScreen from './main/chat/ChatList';
 import firebase from 'firebase/compat';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -90,6 +92,19 @@ export class Main extends Component {
                                         size={26} />
                                 ),
                             }} />
+                        <Tab.Screen 
+                            name="ChatScreen"
+                            component={ChatListScreen}
+                            options={{
+                                tabBarIcon: ({ color, size, focused }) => (
+                                    <MaterialCommunityIcons 
+                                        name="send" 
+                                        color={focused ? "black" : color} 
+                                        size={24}
+                                        style={{ transform: [{ rotate: '-30deg' }] }}
+                                        />
+                                ),
+                            }}/>
                         <Tab.Screen 
                             name="Profile" 
                             component={ProfileScreen}

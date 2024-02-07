@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TextInput, Image, Button } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Image, Button, ActivityIndicator } from 'react-native';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
@@ -8,13 +8,14 @@ import { container } from '../../styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchUser } from '../../../redux/action/index';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 require('firebase/firestore');
 
 function Save(props) {
     const [caption, setCaption] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
 
     const uploadImage = async () => {
@@ -31,6 +32,7 @@ function Save(props) {
                         .put(blob);
         
         const taskProgress = snapshot => {
+            setLoading(true);
             console.log(`transfered: ${snapshot.bytesTransferred}`);
         }
         const taskCompleted = snapshot => {
@@ -66,10 +68,23 @@ function Save(props) {
                 })
         }
     }
-
     const { currentUser } = props;
     return (
         <View style={container.container}>
+            { loading ? 
+            <View style={[container.centerScreen, container.containerCol]}>
+                <ActivityIndicator 
+                    size={'large'} color={'black'} />
+            <View style={styles.container}>
+                <Animatable.Text
+                    animation="rubberBand"
+                    iterationCount="infinite"
+                >
+                    Upload in progress...
+                </Animatable.Text>
+            </View>
+            </View> 
+            : 
             <View style={{flexDirection: 'col', flex: 1}}>
                 <View style={container.center}>
                     <View style={{flexDirection: 'row', alignItems: 'center', paddingLeft: 15, paddingTop: 15}}>
@@ -86,7 +101,8 @@ function Save(props) {
                         multiline
                         numberOfLines={4}
                         onChangeText={(textCaption) => setCaption(textCaption)}
-                        placeholder='Write a caption...'>
+                        placeholder='Write a caption...'
+                        style={{marginLeft: 10}}>
                     </TextInput>
                 </View>
                 <View style={[container.center, styles.containerImage]}>
@@ -96,13 +112,13 @@ function Save(props) {
                 </View>
                 <View style={[container.container, {justifyContent: 'center'}]}>
                     <View style={{margin: 10}}>
-                        <Button title="back" color={'red'} onPress={() => alert("Tính năng đang phát triển")} />
+                        <Button title="back" color={'red'} onPress={() => props.navigation.goBack()} />
                     </View>
                     <View style={{margin: 10}}>
                         <Button title="save" color={'black'} onPress={uploadImage} />
                     </View>
                 </View>
-            </View>
+            </View>}
         </View>
       )
 };
@@ -120,7 +136,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         paddingLeft: 15,
-    }
+    },
 });
 
 const mapStateToProps = (store) => ({

@@ -20,6 +20,7 @@ function Profile(props) {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [following, setFollowing] = useState(false);
+    const [cntFollowing, setcntFollowing] = useState(0);
 
     const updateUserData =() => {
         if(props.route.params.uid === firebase.auth().currentUser.uid) {
@@ -185,7 +186,7 @@ function Profile(props) {
                             </TouchableOpacity>)}
                         <TouchableOpacity
                             style={styles.btnInteract}
-                            onPress={() => {console.log("You have entered !")}}>
+                            onPress={() => props.navigation.navigate("Chat")}>
                             <Text style={{textAlign: "center", fontWeight: "bold"}}>Message</Text>
                         </TouchableOpacity>
                     </View>

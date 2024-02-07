@@ -5,8 +5,17 @@ const container = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
     },
+    containerCol: {
+        flex: 1,
+        flexDirection: 'column',
+    },
     center: {
         flex: 1,
+    },
+    centerScreen: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     form: {
         flex: 1,

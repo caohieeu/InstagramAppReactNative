@@ -8,6 +8,8 @@ import MainScreen from './components/Main';
 import CameraScreen from './components/main/add/Camera';
 import SaveScreen from './components/main/add/Save';
 import SearchScreen from './components/main/profile/Search'
+import ChatScreen from './components/main/chat/Chat';
+import ChatListScreen from './components/main/chat/ChatList'
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -29,7 +31,6 @@ if(firebase.apps.length === 0) {
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
 
@@ -91,6 +92,8 @@ export default class App extends Component {
               <Stack.Screen name="Add" component={CameraScreen} />
               <Stack.Screen name="Save" navigation={this.props.navigation} component={SaveScreen} />
               <Stack.Screen name="Search" navigation={this.props.navigation} component={SearchScreen} />
+              <Stack.Screen name="Chat" navigation={this.props.navigation} component={ChatScreen} />
+              <Stack.Screen name="ChatList" navigation={this.props.navigation} component={ChatListScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
